@@ -16,8 +16,8 @@ export default function ChevronDown(props: ChevronDownProps) {
       <path
         d="M2 5.24219L6.24264 9.48483L10.4853 5.24219"
         className="stroke-inherit"
-        stroke-width="1.5"
-        stroke-linecap="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
       />
     </svg>
   )

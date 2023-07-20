@@ -1,6 +1,6 @@
 'use client'
 
-import { cx } from '@/lib/util'
+import { cn } from '@/lib/utils'
 import { DetailedHTMLProps, HTMLAttributes } from 'react'
 import LinkedIn from '../icons/LinkedIn'
 import Instagram from '../icons/Instagram'
@@ -15,13 +15,13 @@ interface FooterProps
 export default function Footer({ className, ...attrs }: FooterProps) {
   return (
     <footer
-      className={cx(
-        'flex h-[176px] w-full items-center bg-dark-midnight-blue',
+      className={cn(
+        'flex h-footer w-full items-center bg-dark-midnight-blue',
         className,
       )}
       {...attrs}
     >
-      <div className="m-auto flex h-[56px] w-[1200px] justify-between">
+      <div className="m-auto flex h-[56px] w-app-max justify-between">
         <div className="flex flex-col gap-2.5">
           <span className="text-xs font-normal not-italic leading-[130%] tracking-[-0.24px] text-white">
             Follow Us

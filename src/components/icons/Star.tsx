@@ -1,6 +1,5 @@
 'use client'
 
-import { cx } from '@/lib/util'
 import { SVGProps } from 'react'
 
 interface StarProps extends SVGProps<SVGSVGElement> {
