@@ -2,26 +2,128 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    /* #0265FF */
+    --royal-blue: 2, 101, 255;
+    /* #F8814E */
+    --vibrant-orange: 248, 129, 78;
+    /* #D1E31E */
+    --lime-green: 209, 227, 30;
+    /* #DCF10D */
+    --vibrant-lime-green: 220, 241, 13;
+    /* #D7F8FF */
+    --powder-blue: 215, 248, 255;
+    /* #10131C */
+    --dark-midnight-blue: 16, 19, 28;
+    /* #192140 */
+    --midnight-blue: 25, 33, 64;
+    /* #9D9DB5 */
+    --slate-blue: 157, 157, 181;
+    /* #C0BFCF */
+    --lavender-gray: 192, 191, 207;
+    /* #F8F9FC */
+    --ghost-white: 248, 249, 252;
+    /* #EBEFF8 */
+    --pale-blue-gray: 235, 239, 248;
+    /* #FF3333 */
+    --error: 255, 51, 51;
+    /* #625F87 */
+    --grape: 98, 95, 135;
+    /* #FFFFFF */
+    --white: 255, 255, 255;
+
+    --updown-threepoints-offset: 0px;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@layer components {
+  .btn {
+    display: flex;
+    box-sizing: border-box;
+    padding: 16px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    height: 48px;
+    color: var(--slate-blue);
+    border-radius: 10px;
+    border: 1px solid var(--slate-blue);
+    background: transparent;
+  }
+
+  .btn:hover {
+    border-color: rgb(var(--royal-blue));
+    color: rgb(var(--royal-blue));
+  }
+
+  .btn:active {
+    border-color: rgb(var(--royal-blue));
+    background-color: rgb(var(--royal-blue));
+    color: rgb(var(--white));
+  }
+
+  .btn-pill {
+    border-radius: 40px;
+  }
+
+  .btn-icon {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    fill: transparent;
+    stroke: rgb(var(--slate-blue));
+  }
+
+  .btn-icon:hover {
+    stroke: rgb(var(--royal-blue));
+  }
+
+  .btn-icon:active {
+    stroke: rgb(var(--royal-blue));
+    fill: rgb(var(--royal-blue));
+  }
+
+  .card {
+    display: flex;
+    width: 320px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .card-img {
+    width: 320px;
+    height: 165px;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid white;
+    background-color: rgb(var(--slate-blue));
+    background-image: url(/image-placeholder.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    border-bottom: none;
+    @apply rounded-t-md;
+  }
+
+  .card-content {
+    box-sizing: border-box;
+    border: 1px solid rgb(var(--slate-blue));
+    border-top: none;
+    width: 320px;
+    padding: 10px 20px;
+    gap: 20px;
+    background: rgb(var(--ghost-white));
+    @apply rounded-b-md;
+  }
 }
