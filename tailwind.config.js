@@ -32,6 +32,10 @@ const keyframes = {
   },
 }
 
+const width = {
+  'app-max': '1040px',
+}
+
 const animation = {
   'updown-threepoints': 'updown-threepoints 1s infinite ease-in-out',
 }
@@ -44,6 +48,7 @@ module.exports = {
   ],
   theme: {
     extend: {
+      width,
       colors,
       keyframes,
       animation,

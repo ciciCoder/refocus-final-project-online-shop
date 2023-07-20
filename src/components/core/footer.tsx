@@ -21,7 +21,7 @@ export default function Footer({ className, ...attrs }: FooterProps) {
       )}
       {...attrs}
     >
-      <div className="m-auto flex h-[56px] w-[1200px] justify-between">
+      <div className="m-auto flex h-[56px] w-app-max justify-between">
         <div className="flex flex-col gap-2.5">
           <span className="text-xs font-normal not-italic leading-[130%] tracking-[-0.24px] text-white">
             Follow Us

@@ -3,8 +3,8 @@
 import { cx } from '@/lib/util'
 import Image from 'next/image'
 import { DetailedHTMLProps, HTMLAttributes } from 'react'
-import ShoppingCart from '../icons/shopping-cart'
-import ChevronDown from '../icons/chevron-down'
+import ShoppingCart from '../icons/ShoppingCart'
+import ChevronDown from '../icons/ChevronDown'
 
 interface HeaderProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
@@ -17,7 +17,7 @@ export default function Header({ className, ...attrs }: HeaderProps) {
       )}
       {...attrs}
     >
-      <div className="m-auto flex w-[1200px] items-center justify-between">
+      <div className="m-auto flex w-app-max items-center justify-between">
         <Image src="/Logo.svg" width={140} alt="logo" height={20} />
         <div className="flex h-[48px] w-[247px] items-center gap-10">
           <button className="btn btn-pill border border-solid border-royal-blue bg-transparent text-royal-blue hover:opacity-50 active:opacity-100">
