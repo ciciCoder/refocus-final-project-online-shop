@@ -14,10 +14,10 @@ interface HomeProps {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const { products, limit } = await fetchProducts(searchParams)
+  const { products, limit, total } = await fetchProducts(searchParams)
   return (
     <div>
-      <ProductIndex limit={limit} products={products} />
+      <ProductIndex limit={limit} total={total} products={products} />
     </div>
   )
 }

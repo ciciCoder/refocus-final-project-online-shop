@@ -8,7 +8,7 @@ export default async function GuestLayout({ children }: GuestLayoutProps) {
   return (
     <div className="min-h-[100vh]">
       <Header />
-      <main className="min-h-[calc(100vh-84px-176px)]">
+      <main className="min-h-main py-[60px]">
         <div className="m-auto w-app-max">{children}</div>
       </main>
       <Footer />

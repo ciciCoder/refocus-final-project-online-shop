@@ -1,6 +1,6 @@
 'use client'
 
-import { cx } from '@/lib/util'
+import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { DetailedHTMLProps, HTMLAttributes } from 'react'
 import ShoppingCart from '../icons/ShoppingCart'
@@ -11,15 +11,15 @@ interface HeaderProps
 export default function Header({ className, ...attrs }: HeaderProps) {
   return (
     <header
-      className={cx(
-        'flex h-[84px] w-full items-center bg-midnight-blue',
+      className={cn(
+        'flex h-header w-full items-center bg-midnight-blue',
         className,
       )}
       {...attrs}
     >
       <div className="m-auto flex w-app-max items-center justify-between">
         <Image src="/Logo.svg" width={140} alt="logo" height={20} />
-        <div className="flex h-[48px] w-[247px] items-center gap-10">
+        <div className="flex h-[48px] items-center gap-10">
           <button className="btn btn-pill border border-solid border-royal-blue bg-transparent text-royal-blue hover:opacity-50 active:opacity-100">
             Sign in
           </button>

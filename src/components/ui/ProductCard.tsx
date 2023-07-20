@@ -1,5 +1,5 @@
 'use client'
-import { cx, formatCurrency } from '@/lib/util'
+import { cn, formatCurrency } from '@/lib/utils'
 import { Inter } from 'next/font/google'
 import Star from '../icons/Star'
 import House from '../icons/House'
@@ -8,6 +8,8 @@ import ThreeDotsAnimated from '../icons/ThreeDotsAnimated'
 import Image from 'next/image'
 import { ReactEventHandler, useRef } from 'react'
 import { Product } from '@/api/product.api'
+import { Tooltip } from '@radix-ui/react-tooltip'
+import { TooltipContent, TooltipTrigger } from './Tooltip'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +18,7 @@ interface ProductCardInfoProps {
 }
 
 export function ProductCardInfo({ product }: ProductCardInfoProps) {
-  const originalPrice = product.price * (1 - product.discountPercentage / 100)
+  const originalPrice = product.price * (1 + product.discountPercentage / 100)
   const formattedPrice = formatCurrency(product.price, 'USD')
   const formattedOriginalPrice = formatCurrency(originalPrice, 'USD')
 
@@ -58,30 +60,44 @@ function ProductCardAction({ product }: ProductCardActionProps) {
     let ratingRemaining = product.rating + 1
     return new Array(5).fill(0).map((item, index) => {
       ratingRemaining--
-      if (ratingRemaining < 1 && ratingRemaining > 0) return ratingRemaining
+      if (ratingRemaining < 1 && ratingRemaining > 0)
+        return Number(ratingRemaining.toFixed(2))
       if (ratingRemaining >= 1) return 1
       return 0
     })
   })()
+
+  const getStar = (rate: number, key: number) => {
+    if (rate > 0.8)
+      return (
+        <Star
+          key={key}
+          className="h-[12px] w-[12px] fill-lime-green stroke-lime-green duration-1000"
+        />
+      )
+    if (rate > 0.25)
+      return (
+        <Star
+          key={key}
+          className="h-[12px] w-[12px] fill-none stroke-lime-green duration-1000"
+          fill="transparent"
+          shade={true}
+          shadeOffset={50}
+          shadeColor="rgb(var(--lime-green))"
+        />
+      )
+    return (
+      <Star
+        key={key}
+        className="h-[12px] w-[12px] fill-none stroke-lime-green duration-1000"
+      />
+    )
+  }
   return (
     <div className="flex h-[32px] w-full items-center justify-between text-slate-blue">
       <div className="flex items-center gap-2.5">
         <div className="flex gap-1">
-          <div className="flex">
-            {starValues.map((rate, index) => (
-              <Star
-                key={index}
-                className={cx(
-                  'h-[12px] w-[12px] stroke-lime-green duration-1000',
-                  rate === 1 ? 'fill-lime-green' : 'fill-none',
-                )}
-                fill="transparent"
-                shade={rate !== 1}
-                shadeOffset={rate * 100}
-                shadeColor="rgb(var(--lime-green))"
-              />
-            ))}
-          </div>
+          <div className="flex">{starValues.map(getStar)}</div>
           <span className="leading-[120%] tracking-[-0.1px] [font-size:10px]">
             {product.rating}
           </span>
@@ -95,7 +111,7 @@ function ProductCardAction({ product }: ProductCardActionProps) {
       </div>
       <span>&middot;</span>
       <div>
-        <button className="btn box-border h-8 bg-royal-blue py-1 text-white duration-500 hover:opacity-50">
+        <button className="btn box-border h-8 bg-royal-blue py-1 text-white duration-500 hover:bg-opacity-50">
           <ShoppingCart className="max-h-6 w-6" />
         </button>
       </div>
@@ -114,11 +130,11 @@ export default function ProductCard({ product }: ProductCardProps) {
     imgLoaderRef.current?.classList.add('hidden')
   }
   return (
-    <div className={cx('card', inter.className)}>
+    <div className={cn('card', inter.className)}>
       <div className="card-img">
         <ThreeDotsAnimated ref={imgLoaderRef} fill="white" />
         <Image
-          src="https://i.dummyjson.com/data/products/1/thumbnail.jpg"
+          src={product.thumbnail}
           alt="thumbnail"
           layout="fill"
           objectFit="cover"

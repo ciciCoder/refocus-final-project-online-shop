@@ -1,6 +1,6 @@
 'use client'
 
-import { cx } from '@/lib/util'
+import { cn } from '@/lib/utils'
 import { DetailedHTMLProps, HTMLAttributes } from 'react'
 import LinkedIn from '../icons/LinkedIn'
 import Instagram from '../icons/Instagram'
@@ -15,8 +15,8 @@ interface FooterProps
 export default function Footer({ className, ...attrs }: FooterProps) {
   return (
     <footer
-      className={cx(
-        'flex h-[176px] w-full items-center bg-dark-midnight-blue',
+      className={cn(
+        'flex h-footer w-full items-center bg-dark-midnight-blue',
         className,
       )}
       {...attrs}

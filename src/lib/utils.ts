@@ -1,20 +1,18 @@
-export const cx = (
-  ...classNames: (string | boolean | undefined | null | number)[]
-) => classNames.filter((className) => className).join(' ')
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 export const formatCurrency = (
   number: number,
   currencyCode: string,
-  locale?: string,
+  locale: string = 'en-US',
 ) => {
   // Check if the input is a valid number
   if (isNaN(number)) {
     throw new Error('Invalid input. Please provide a valid number.')
-  }
-
-  // Default to the user's locale if not specified
-  if (!locale) {
-    locale = navigator.language || 'en-US'
   }
 
   // Format the number as currency based on the specified currency code and locale

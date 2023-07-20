@@ -25,11 +25,12 @@ interface FetchProductsProps {
   limit: string
 }
 
-export const fetchProducts = async ({ limit = '8' }: FetchProductsProps) => {
+export const fetchProducts = async ({ limit = '6' }: FetchProductsProps) => {
   const { data } = await axios.get<FetchResults>(
     'https://dummyjson.com/products',
     { params: { limit } },
   )
   if (!data) throw new Error('error fetching data')
+
   return data
 }
