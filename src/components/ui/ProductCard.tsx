@@ -7,8 +7,6 @@ import ThreeDotsAnimated from '../icons/ThreeDotsAnimated'
 import Image from 'next/image'
 import { ReactEventHandler, useRef } from 'react'
 import { Product } from '@/api/product.api'
-import { Tooltip } from '@radix-ui/react-tooltip'
-import { TooltipContent, TooltipTrigger } from './Tooltip'
 import {
   CartItem,
   addToCart,
@@ -35,9 +33,16 @@ interface ProductCardInfoProps {
 }
 
 export function ProductCardInfo({ product }: ProductCardInfoProps) {
+  const [currency, currencyFactor] = useAppSelector((state) => state.currency)
   const originalPrice = product.price * (1 + product.discountPercentage / 100)
-  const formattedPrice = formatCurrency(product.price, 'USD')
-  const formattedOriginalPrice = formatCurrency(originalPrice, 'USD')
+  const formattedPrice = formatCurrency(
+    product.price * currencyFactor,
+    currency,
+  )
+  const formattedOriginalPrice = formatCurrency(
+    originalPrice * currencyFactor,
+    currency,
+  )
 
   return (
     <div className="flex flex-col gap-[5px]">
@@ -46,12 +51,15 @@ export function ProductCardInfo({ product }: ProductCardInfoProps) {
           {product.title}
         </span>
       </div>
-      <div className="line-clamp-2 h-[40px]">
-        <p className="overflow-hidden text-ellipsis text-xs font-normal not-italic leading-[130%] tracking-[-0.24px] text-[#625F87]">
+      <div className="tooltip h-[40px] ">
+        <p className="line-clamp-2 text-ellipsis text-xs font-normal not-italic leading-[130%] tracking-[-0.24px] text-[#625F87]">
+          {product.description}
+        </p>
+        <p className="tooltiptext tooltip-top line-clamp-none min-w-[400px!important] px-3 py-2">
           {product.description}
         </p>
       </div>
-      <div className="flex h-[28px] items-center gap-[5px] ">
+      <div className="flex min-h-[28px] flex-wrap items-center gap-[5px] ">
         <span className="text-xl font-semibold not-italic leading-[140%] tracking-[-0.4px]">
           {formattedPrice}
         </span>

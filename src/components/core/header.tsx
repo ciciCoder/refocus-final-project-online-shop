@@ -2,15 +2,68 @@
 
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
-import { DetailedHTMLProps, HTMLAttributes } from 'react'
+import { DetailedHTMLProps, HTMLAttributes, useEffect, useMemo } from 'react'
 import ShoppingCart from '../icons/ShoppingCart'
 import ChevronDown from '../icons/ChevronDown'
 import { useAppSelector } from '@/hooks'
+import { Rates } from '@/api/currency.api'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/Popover'
+import { useDispatch } from 'react-redux'
+import { initCurrency, setCurrency } from '@/redux/currency.slice'
+
+function HeaderCurrenyPopover({ rates }: { rates: Rates }) {
+  const [currency] = useAppSelector((state) => state.currency)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(initCurrency())
+  }, [])
+
+  const currencyTypes = useMemo(
+    () => Object.keys(rates) as Array<keyof Rates>,
+    [rates],
+  )
+
+  const setCurrencyHandler = (key: keyof Rates) => () => {
+    dispatch(setCurrency([key, rates[key]]))
+  }
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <ChevronDown className="stroke-royal-blue" width={12} height={12} />
+      </PopoverTrigger>
+      <PopoverContent className="w-auto overflow-hidden border border-solid border-light-gray p-0">
+        <ul className="list-none">
+          {currencyTypes.map((key) => {
+            return (
+              <li
+                key={key}
+                className={cn(
+                  'h-full w-full cursor-pointer px-4 py-2 duration-500 hover:bg-royal-blue hover:text-white',
+                  key === currency &&
+                    'bg-royal-blue text-white hover:bg-opacity-50',
+                )}
+                onClick={setCurrencyHandler(key)}
+              >
+                {key}
+              </li>
+            )
+          })}
+        </ul>
+      </PopoverContent>
+    </Popover>
+  )
+}
 
 interface HeaderProps
-  extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
-export default function Header({ className, ...attrs }: HeaderProps) {
-  const cart = useAppSelector((state) => state.cart)
+  extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+  rates: Rates
+}
+export default function Header({ rates, className, ...attrs }: HeaderProps) {
+  const {
+    cart,
+    currency: [currency],
+  } = useAppSelector((state) => state)
   const cartItems = cart.length
   return (
     <header
@@ -36,15 +89,9 @@ export default function Header({ className, ...attrs }: HeaderProps) {
           </div>
           <div className="flex gap-[5px]">
             <span className="text-base font-bold not-italic leading-[100%] tracking-[-0.16px] text-slate-blue">
-              USD
+              {currency}
             </span>
-            <span>
-              <ChevronDown
-                className="stroke-royal-blue"
-                width={12}
-                height={12}
-              />
-            </span>
+            <HeaderCurrenyPopover rates={rates} />
           </div>
         </div>
       </div>

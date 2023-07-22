@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import cartSlice from './cart.slice'
+import currencySlice from './currency.slice'
 
 const store = configureStore({
   reducer: {
     cart: cartSlice,
+    currency: currencySlice,
   },
 })
 

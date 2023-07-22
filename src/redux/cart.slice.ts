@@ -1,72 +1,60 @@
 import { Product } from '@/api/product.api'
+import { appLocalStorage } from '@/lib/utils'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export interface CartItem extends Product {
   quantity: number
 }
 
-function getInitialState() {
-  if (typeof window !== 'undefined' && window.localStorage) {
-    const result = localStorage.getItem('cart')
-    if (!result) return []
-    const cart = JSON.parse(result) as CartItem[]
-    if (!Array.isArray(cart))
-      throw new Error(`${typeof cart} is incomaptible with type Cart[]`)
-    return cart
-  }
-  return []
-}
+const cartSlice = (() => {
+  const LOCAL_STORAGE_KEY = 'cart'
+  const defaultCart = [] as CartItem[]
+  const [getLocalStorageCart, setLocalStorageCart] = appLocalStorage(
+    LOCAL_STORAGE_KEY,
+    defaultCart,
+  )
 
-const setLocalCart = (() => {
-  // let timeout: NodeJS.Timeout
-  return function (cart: CartItem[]) {
-    localStorage.setItem('cart', JSON.stringify(cart))
-    // clearTimeout(timeout)
-    // timeout = setTimeout(() => {
-    // }, 100)
-  }
+  return createSlice({
+    name: 'cart',
+    initialState: defaultCart,
+    reducers: {
+      initCart() {
+        return [...getLocalStorageCart()]
+      },
+      addToCart(state, action: PayloadAction<Product>) {
+        state.push({ ...action.payload, quantity: 1 })
+        setLocalStorageCart(state)
+      },
+      removeFromCart(state, action: PayloadAction<CartItem['id']>) {
+        const filteredState = state.filter((item) => item.id !== action.payload)
+        setLocalStorageCart(filteredState)
+        return filteredState
+      },
+      incrementCartItem(state, action: PayloadAction<CartItem['id']>) {
+        const mappedState = state.map((item) => {
+          if (item.id !== action.payload) return item
+          return {
+            ...item,
+            quantity: item.quantity + 1,
+          }
+        })
+        setLocalStorageCart(mappedState)
+        return mappedState
+      },
+      decrementCartItem(state, action: PayloadAction<CartItem['id']>) {
+        const mappedState = state.map((item) => {
+          if (item.id !== action.payload) return item
+          return {
+            ...item,
+            quantity: item.quantity - 1,
+          }
+        })
+        setLocalStorageCart(mappedState)
+        return mappedState
+      },
+    },
+  })
 })()
-
-const cartSlice = createSlice({
-  name: 'cart',
-  initialState: [] as CartItem[],
-  reducers: {
-    initCart() {
-      return [...getInitialState()]
-    },
-    addToCart(state, action: PayloadAction<Product>) {
-      state.push({ ...action.payload, quantity: 1 })
-      setLocalCart(state)
-    },
-    removeFromCart(state, action: PayloadAction<CartItem['id']>) {
-      const filteredState = state.filter((item) => item.id !== action.payload)
-      setLocalCart(filteredState)
-      return filteredState
-    },
-    incrementCartItem(state, action: PayloadAction<CartItem['id']>) {
-      const mappedState = state.map((item) => {
-        if (item.id !== action.payload) return item
-        return {
-          ...item,
-          quantity: item.quantity + 1,
-        }
-      })
-      setLocalCart(mappedState)
-      return mappedState
-    },
-    decrementCartItem(state, action: PayloadAction<CartItem['id']>) {
-      const mappedState = state.map((item) => {
-        if (item.id !== action.payload) return item
-        return {
-          ...item,
-          quantity: item.quantity - 1,
-        }
-      })
-      setLocalCart(mappedState)
-      return mappedState
-    },
-  },
-})
 
 export const {
   addToCart,

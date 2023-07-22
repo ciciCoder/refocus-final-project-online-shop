@@ -52,10 +52,14 @@
     --slate-blue: 157, 157, 181;
     /* #C0BFCF */
     --lavender-gray: 192, 191, 207;
+    /* #E9E9EA */
+    --light-gray: 233, 233, 234;
     /* #F8F9FC */
     --ghost-white: 248, 249, 252;
     /* #EBEFF8 */
     --pale-blue-gray: 235, 239, 248;
+    /* #D7F8FF */
+    --pale-blue: 215, 248, 255;
     /* #FF3333 */
     --error: 255, 51, 51;
     /* #625F87 */
@@ -155,6 +159,45 @@
     padding: 10px 20px;
     gap: 20px;
     background: rgb(var(--ghost-white));
-    @apply rounded-b-md;
+    transition-duration: 0.5s;
+    cursor: pointer;
+    @apply rounded-b-md hover:bg-pale-blue;
+  }
+
+  .tooltip {
+    position: relative;
+  }
+
+  /* Tooltip text */
+  .tooltip .tooltiptext {
+    opacity: 0;
+    background-color: rgb(var(--royal-blue));
+    color: rgb(var(--white));
+    text-align: center;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    transition-duration: 0.5s;
+  }
+
+  .tooltip-top {
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .tooltip-top::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgb(var(--royal-blue)) transparent transparent;
+  }
+
+  .tooltip:hover .tooltiptext {
+    opacity: 1;
   }
 }
