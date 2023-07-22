@@ -1,11 +1,12 @@
 'use client'
 
 import { Product } from '@/api/product.api'
-import ProductCard from './ui/ProductCard'
+import ProductCard, { ProductListItem } from './ui/ProductCard'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import ThreeDotsAnimated from './icons/ThreeDotsAnimated'
+import { useAppSelector } from '@/hooks'
 
 interface ProductIndexProps {
   products: Product[]
@@ -19,7 +20,22 @@ export default function ProductIndex({
   limit,
 }: ProductIndexProps) {
   const [loadingMore, setLoadingMore] = useState(false)
+  const cart = useAppSelector((state) => state.cart)
 
+  const cartMap = useMemo(
+    () => new Map(cart.map((cartItem) => [cartItem.id, cartItem])),
+    [cart],
+  )
+
+  const productList = useMemo(
+    () =>
+      products.map((product) => {
+        const cart = cartMap.get(product.id)
+        if (!cart) return product
+        return { ...cart, stock: cart.stock - cart.quantity }
+      }) as ProductListItem[],
+    [products, cartMap],
+  )
   const nextSearchParams = new URLSearchParams()
   nextSearchParams.set('limit', String(limit + 6))
 
@@ -33,7 +49,7 @@ export default function ProductIndex({
         All Products
       </h2>
       <div className="grid grid-cols-3 gap-10">
-        {products.map((product) => (
+        {productList.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>

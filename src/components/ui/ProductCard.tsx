@@ -3,18 +3,35 @@ import { cn, formatCurrency } from '@/lib/utils'
 import { Inter } from 'next/font/google'
 import Star from '../icons/Star'
 import House from '../icons/House'
-import { ShoppingCart } from 'lucide-react'
 import ThreeDotsAnimated from '../icons/ThreeDotsAnimated'
 import Image from 'next/image'
 import { ReactEventHandler, useRef } from 'react'
 import { Product } from '@/api/product.api'
 import { Tooltip } from '@radix-ui/react-tooltip'
 import { TooltipContent, TooltipTrigger } from './Tooltip'
+import {
+  CartItem,
+  addToCart,
+  decrementCartItem,
+  incrementCartItem,
+  removeFromCart,
+} from '@/redux/cart.slice'
+import { useAppDispatch, useAppSelector } from '@/hooks'
+import Plus from '../icons/Plus'
+import Minus from '../icons/Minus'
+import ShoppingCart from '../icons/ShoppingCart'
 
 const inter = Inter({ subsets: ['latin'] })
 
+export interface ProductListItem extends Product {
+  quantity?: CartItem['quantity']
+}
+
 interface ProductCardInfoProps {
-  product: Pick<Product, 'description' | 'price' | 'discountPercentage'>
+  product: Pick<
+    ProductListItem,
+    'description' | 'price' | 'discountPercentage' | 'title'
+  >
 }
 
 export function ProductCardInfo({ product }: ProductCardInfoProps) {
@@ -26,7 +43,7 @@ export function ProductCardInfo({ product }: ProductCardInfoProps) {
     <div className="flex flex-col gap-[5px]">
       <div className="line-clamp-1 h-[26px]">
         <span className="text-ellipsis text-xl font-bold not-italic leading-[130%] tracking-[-0.4px] text-midnight-blue">
-          {product.description}
+          {product.title}
         </span>
       </div>
       <div className="line-clamp-2 h-[40px]">
@@ -52,10 +69,12 @@ export function ProductCardInfo({ product }: ProductCardInfoProps) {
 }
 
 interface ProductCardActionProps {
-  product: Pick<Product, 'rating' | 'stock'>
+  product: ProductListItem
 }
 
 function ProductCardAction({ product }: ProductCardActionProps) {
+  const dispatch = useAppDispatch()
+  const cart = useAppSelector((state) => state.cart)
   const starValues = (() => {
     let ratingRemaining = product.rating + 1
     return new Array(5).fill(0).map((item, index) => {
@@ -93,6 +112,23 @@ function ProductCardAction({ product }: ProductCardActionProps) {
       />
     )
   }
+
+  const onIncrementHandler = () => {
+    dispatch(incrementCartItem(product.id))
+  }
+
+  const onDecrementHandler = () => {
+    if (product.quantity === 1) {
+      dispatch(removeFromCart(product.id))
+      return
+    }
+    dispatch(decrementCartItem(product.id))
+  }
+
+  const onAddToCartHandler = () => {
+    dispatch(addToCart({ ...product }))
+  }
+
   return (
     <div className="flex h-[32px] w-full items-center justify-between text-slate-blue">
       <div className="flex items-center gap-2.5">
@@ -111,16 +147,32 @@ function ProductCardAction({ product }: ProductCardActionProps) {
       </div>
       <span>&middot;</span>
       <div>
-        <button className="btn box-border h-8 bg-royal-blue py-1 text-white duration-500 hover:bg-opacity-50">
-          <ShoppingCart className="max-h-6 w-6" />
-        </button>
+        {!product.quantity ? (
+          <button
+            onClick={onAddToCartHandler}
+            className="btn box-border h-8 gap-[5px] bg-royal-blue py-1 text-white duration-500 hover:bg-opacity-50"
+          >
+            <ShoppingCart className="max-h-6 w-6 fill-white" />
+          </button>
+        ) : (
+          <div className="btn flex h-8 items-center gap-[5px] border border-solid border-royal-blue bg-transparent text-royal-blue active:bg-transparent active:text-royal-blue">
+            <button onClick={onIncrementHandler}>
+              <Plus className="fill-royal-blue" />
+            </button>
+            <span>{product.quantity}</span>
+            <button onClick={onDecrementHandler}>
+              <Minus className="fill-royal-blue" />
+            </button>
+            <ShoppingCart className="max-h-6 w-6 fill-royal-blue" />
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
 interface ProductCardProps {
-  product: Product
+  product: ProductListItem
 }
 export default function ProductCard({ product }: ProductCardProps) {
   const imgLoaderRef = useRef<SVGSVGElement>(null)

@@ -5,10 +5,13 @@ import Image from 'next/image'
 import { DetailedHTMLProps, HTMLAttributes } from 'react'
 import ShoppingCart from '../icons/ShoppingCart'
 import ChevronDown from '../icons/ChevronDown'
+import { useAppSelector } from '@/hooks'
 
 interface HeaderProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}
 export default function Header({ className, ...attrs }: HeaderProps) {
+  const cart = useAppSelector((state) => state.cart)
+  const cartItems = cart.length
   return (
     <header
       className={cn(
@@ -23,7 +26,14 @@ export default function Header({ className, ...attrs }: HeaderProps) {
           <button className="btn btn-pill border border-solid border-royal-blue bg-transparent text-royal-blue hover:opacity-50 active:opacity-100">
             Sign in
           </button>
-          <ShoppingCart width={24} height={24} className="fill-slate-blue" />
+          <div className="relative flex items-center">
+            <ShoppingCart width={24} height={24} className="fill-slate-blue" />
+            {!!cartItems && (
+              <div className="absolute right-0 top-0 flex h-2.5 w-2.5 items-center justify-center overflow-hidden rounded-full bg-white text-center text-[6px] font-semibold not-italic leading-[100%] tracking-[-0.06px]">
+                {cartItems}
+              </div>
+            )}
+          </div>
           <div className="flex gap-[5px]">
             <span className="text-base font-bold not-italic leading-[100%] tracking-[-0.16px] text-slate-blue">
               USD
