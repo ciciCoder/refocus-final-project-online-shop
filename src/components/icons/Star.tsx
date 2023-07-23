@@ -2,7 +2,7 @@
 
 import { SVGProps } from 'react'
 
-interface StarProps extends SVGProps<SVGSVGElement> {
+export interface StarIconProps extends SVGProps<SVGSVGElement> {
   shade?: boolean
   shadeColor?: string
   shadeOffset?: number
@@ -14,7 +14,7 @@ export default function Star({
   shadeColor,
   fill,
   ...attrs
-}: StarProps) {
+}: StarIconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

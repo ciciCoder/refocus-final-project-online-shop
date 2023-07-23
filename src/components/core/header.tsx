@@ -9,15 +9,18 @@ import { useAppSelector } from '@/hooks'
 import { Rates } from '@/api/currency.api'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/Popover'
 import { useDispatch } from 'react-redux'
-import { initCurrency, setCurrency } from '@/redux/currency.slice'
+import { setCurrency } from '@/redux/currency.slice'
+import Link from 'next/link'
 
-function HeaderCurrenyPopover({ rates }: { rates: Rates }) {
+export function HeaderCurrenyPopover({
+  rates,
+  children,
+}: {
+  rates: Rates
+  children?: React.ReactNode
+}) {
   const [currency] = useAppSelector((state) => state.currency)
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(initCurrency())
-  }, [])
 
   const currencyTypes = useMemo(
     () => Object.keys(rates) as Array<keyof Rates>,
@@ -29,9 +32,7 @@ function HeaderCurrenyPopover({ rates }: { rates: Rates }) {
   }
   return (
     <Popover>
-      <PopoverTrigger>
-        <ChevronDown className="stroke-royal-blue" width={12} height={12} />
-      </PopoverTrigger>
+      <PopoverTrigger>{children}</PopoverTrigger>
       <PopoverContent className="w-auto overflow-hidden border border-solid border-light-gray p-0">
         <ul className="list-none">
           {currencyTypes.map((key) => {
@@ -60,10 +61,8 @@ interface HeaderProps
   rates: Rates
 }
 export default function Header({ rates, className, ...attrs }: HeaderProps) {
-  const {
-    cart,
-    currency: [currency],
-  } = useAppSelector((state) => state)
+  const cart = useAppSelector((state) => state.cart)
+  const [currency] = useAppSelector((state) => state.currency)
   const cartItems = cart.length
   return (
     <header
@@ -74,25 +73,39 @@ export default function Header({ rates, className, ...attrs }: HeaderProps) {
       {...attrs}
     >
       <div className="m-auto flex w-app-max items-center justify-between">
-        <Image src="/Logo.svg" width={140} alt="logo" height={20} />
+        <Link href="/">
+          <Image src="/Logo.svg" width={140} alt="logo" height={20} />
+        </Link>
         <div className="flex h-[48px] items-center gap-10">
           <button className="btn btn-pill border border-solid border-royal-blue bg-transparent text-royal-blue hover:opacity-50 active:opacity-100">
             Sign in
           </button>
           <div className="relative flex items-center">
-            <ShoppingCart width={24} height={24} className="fill-slate-blue" />
-            {!!cartItems && (
-              <div className="absolute right-0 top-0 flex h-2.5 w-2.5 items-center justify-center overflow-hidden rounded-full bg-white text-center text-[6px] font-semibold not-italic leading-[100%] tracking-[-0.06px]">
-                {cartItems}
-              </div>
-            )}
+            <Link href="/shopping-bag">
+              <ShoppingCart
+                width={24}
+                height={24}
+                className="fill-slate-blue"
+              />
+              {!!cartItems && (
+                <div className="absolute right-0 top-0 flex h-2.5 w-2.5 items-center justify-center overflow-hidden rounded-full bg-white text-center text-[6px] font-semibold not-italic leading-[100%] tracking-[-0.06px]">
+                  {cartItems}
+                </div>
+              )}
+            </Link>
           </div>
-          <div className="flex gap-[5px]">
-            <span className="text-base font-bold not-italic leading-[100%] tracking-[-0.16px] text-slate-blue">
-              {currency}
-            </span>
-            <HeaderCurrenyPopover rates={rates} />
-          </div>
+          <HeaderCurrenyPopover rates={rates}>
+            <div className="flex gap-[5px]">
+              <span className="text-base font-bold not-italic leading-[100%] tracking-[-0.16px] text-slate-blue">
+                {currency}
+              </span>
+              <ChevronDown
+                className="stroke-royal-blue"
+                width={12}
+                height={12}
+              />
+            </div>
+          </HeaderCurrenyPopover>
         </div>
       </div>
     </header>

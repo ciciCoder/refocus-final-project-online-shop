@@ -34,3 +34,11 @@ export const fetchProducts = async ({ limit = '6' }: FetchProductsProps) => {
 
   return data
 }
+
+export const fetchOneProduct = async ({ productId }: { productId: string }) => {
+  const { data } = await axios.get<Product>(
+    `https://dummyjson.com/products/${productId}`,
+  )
+  if (!data) throw new Error('error fetching one data')
+  return data
+}

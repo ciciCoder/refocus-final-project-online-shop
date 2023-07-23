@@ -1,8 +1,9 @@
-import { Inter } from 'next/font/google'
-import ProductIndex from '@/components/ProductIndex'
 import { fetchProducts } from '@/api/product.api'
+import dynamic from 'next/dynamic'
 
-const inter = Inter({ subsets: ['latin'] })
+const ProductIndex = dynamic(() => import('@/components/ProductIndex'), {
+  ssr: false,
+})
 
 interface HomeProps {
   searchParams: {

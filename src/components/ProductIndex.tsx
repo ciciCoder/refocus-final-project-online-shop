@@ -1,8 +1,7 @@
 'use client'
 
 import { Product } from '@/api/product.api'
-import ProductCard, { ProductListItem } from './ui/ProductCard'
-import { useSearchParams } from 'next/navigation'
+import ProductCard, { ProductListItem } from './ProductCard'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import ThreeDotsAnimated from './icons/ThreeDotsAnimated'
@@ -50,7 +49,11 @@ export default function ProductIndex({
       </h2>
       <div className="grid grid-cols-3 gap-10">
         {productList.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            href={`/products/${product.id}`}
+            key={product.id}
+            product={product}
+          />
         ))}
       </div>
       {total > limit && (

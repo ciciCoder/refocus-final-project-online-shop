@@ -6,32 +6,26 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const formatCurrency = (
-  number: number,
+  amount: number,
   currencyCode: string,
   locale: string = 'en-US',
 ) => {
   // Check if the input is a valid number
-  if (isNaN(number)) {
-    throw new Error('Invalid input. Please provide a valid number.')
+  if (isNaN(amount)) {
+    throw new Error('Invalid input. Please provide a valid amount.')
   }
 
-  // Format the number as currency based on the specified currency code and locale
+  // Format the amount as currency based on the specified currency code and locale
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currencyCode,
     minimumFractionDigits: 2,
-  }).format(number)
+  }).format(amount)
 }
-export const appLocalStorage = <T extends string, A>(key: T, def: A) => {
-  const getLocalStorage: () => A = () => {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const local = localStorage.getItem(key)
-      return local ? JSON.parse(local) : def
-    }
-    return def
-  }
-  const setLocalStorage = (val: A): void =>
-    localStorage.setItem(key, JSON.stringify(val))
 
-  return [getLocalStorage, setLocalStorage] as [() => A, typeof setLocalStorage]
+export const calculateOriginalPrice = (
+  price: number,
+  discountPercentage: number,
+) => {
+  return price * (1 + discountPercentage / 100)
 }

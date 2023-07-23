@@ -1,11 +1,11 @@
 'use client'
-import { cn, formatCurrency } from '@/lib/utils'
+import { calculateOriginalPrice, cn, formatCurrency } from '@/lib/utils'
 import { Inter } from 'next/font/google'
-import Star from '../icons/Star'
-import House from '../icons/House'
-import ThreeDotsAnimated from '../icons/ThreeDotsAnimated'
+import House from './icons/House'
+import ThreeDotsAnimated from './icons/ThreeDotsAnimated'
 import Image from 'next/image'
-import { ReactEventHandler, useRef } from 'react'
+import { useRouter } from 'next/navigation'
+import { MouseEventHandler, ReactEventHandler, useRef } from 'react'
 import { Product } from '@/api/product.api'
 import {
   CartItem,
@@ -15,9 +15,10 @@ import {
   removeFromCart,
 } from '@/redux/cart.slice'
 import { useAppDispatch, useAppSelector } from '@/hooks'
-import Plus from '../icons/Plus'
-import Minus from '../icons/Minus'
-import ShoppingCart from '../icons/ShoppingCart'
+import Plus from './icons/Plus'
+import Minus from './icons/Minus'
+import ShoppingCart from './icons/ShoppingCart'
+import StartRating from './ui/StarRating'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -34,7 +35,11 @@ interface ProductCardInfoProps {
 
 export function ProductCardInfo({ product }: ProductCardInfoProps) {
   const [currency, currencyFactor] = useAppSelector((state) => state.currency)
-  const originalPrice = product.price * (1 + product.discountPercentage / 100)
+
+  const originalPrice = calculateOriginalPrice(
+    product.price,
+    product.discountPercentage,
+  )
   const formattedPrice = formatCurrency(
     product.price * currencyFactor,
     currency,
@@ -82,50 +87,12 @@ interface ProductCardActionProps {
 
 function ProductCardAction({ product }: ProductCardActionProps) {
   const dispatch = useAppDispatch()
-  const cart = useAppSelector((state) => state.cart)
-  const starValues = (() => {
-    let ratingRemaining = product.rating + 1
-    return new Array(5).fill(0).map((item, index) => {
-      ratingRemaining--
-      if (ratingRemaining < 1 && ratingRemaining > 0)
-        return Number(ratingRemaining.toFixed(2))
-      if (ratingRemaining >= 1) return 1
-      return 0
-    })
-  })()
 
-  const getStar = (rate: number, key: number) => {
-    if (rate > 0.8)
-      return (
-        <Star
-          key={key}
-          className="h-[12px] w-[12px] fill-lime-green stroke-lime-green duration-1000"
-        />
-      )
-    if (rate > 0.25)
-      return (
-        <Star
-          key={key}
-          className="h-[12px] w-[12px] fill-none stroke-lime-green duration-1000"
-          fill="transparent"
-          shade={true}
-          shadeOffset={50}
-          shadeColor="rgb(var(--lime-green))"
-        />
-      )
-    return (
-      <Star
-        key={key}
-        className="h-[12px] w-[12px] fill-none stroke-lime-green duration-1000"
-      />
-    )
-  }
-
-  const onIncrementHandler = () => {
+  const onIncrementHandler: MouseEventHandler<HTMLButtonElement> = () => {
     dispatch(incrementCartItem(product.id))
   }
 
-  const onDecrementHandler = () => {
+  const onDecrementHandler: MouseEventHandler<HTMLButtonElement> = () => {
     if (product.quantity === 1) {
       dispatch(removeFromCart(product.id))
       return
@@ -133,15 +100,24 @@ function ProductCardAction({ product }: ProductCardActionProps) {
     dispatch(decrementCartItem(product.id))
   }
 
-  const onAddToCartHandler = () => {
+  const onAddToCartHandler: MouseEventHandler<HTMLButtonElement> = () => {
     dispatch(addToCart({ ...product }))
   }
 
+  const onProductCardActionClickHandler: MouseEventHandler<HTMLDivElement> = (
+    e,
+  ) => {
+    e.stopPropagation()
+  }
+
   return (
-    <div className="flex h-[32px] w-full items-center justify-between text-slate-blue">
+    <div
+      onClick={onProductCardActionClickHandler}
+      className="flex h-[32px] w-full items-center justify-between text-slate-blue"
+    >
       <div className="flex items-center gap-2.5">
         <div className="flex gap-1">
-          <div className="flex">{starValues.map(getStar)}</div>
+          <StartRating rating={product.rating} />
           <span className="leading-[120%] tracking-[-0.1px] [font-size:10px]">
             {product.rating}
           </span>
@@ -181,23 +157,34 @@ function ProductCardAction({ product }: ProductCardActionProps) {
 
 interface ProductCardProps {
   product: ProductListItem
+  href?: string
 }
-export default function ProductCard({ product }: ProductCardProps) {
-  const imgLoaderRef = useRef<SVGSVGElement>(null)
 
+export default function ProductCard({ product, href }: ProductCardProps) {
+  const router = useRouter()
+  const imgLoaderRef = useRef<SVGSVGElement>(null)
   const onImageLoadHandler: ReactEventHandler<HTMLImageElement> = (e) => {
     e.currentTarget.classList.remove('opacity-0')
     imgLoaderRef.current?.classList.add('hidden')
   }
+
+  const productCardClickHandler: MouseEventHandler<HTMLDivElement> = () => {
+    if (!href) return
+    router.push(href)
+  }
+
   return (
-    <div className={cn('card', inter.className)}>
+    <div
+      className={cn('card', inter.className)}
+      onClick={productCardClickHandler}
+    >
       <div className="card-img">
         <ThreeDotsAnimated ref={imgLoaderRef} fill="white" />
         <Image
           src={product.thumbnail}
           alt="thumbnail"
-          layout="fill"
-          objectFit="cover"
+          fill
+          sizes="inherit"
           className="opacity-0 duration-500"
           onLoad={onImageLoadHandler}
         />

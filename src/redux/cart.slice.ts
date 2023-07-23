@@ -1,5 +1,5 @@
 import { Product } from '@/api/product.api'
-import { appLocalStorage } from '@/lib/utils'
+import { useAppLocalStorage } from '@/hooks'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export interface CartItem extends Product {
@@ -9,18 +9,15 @@ export interface CartItem extends Product {
 const cartSlice = (() => {
   const LOCAL_STORAGE_KEY = 'cart'
   const defaultCart = [] as CartItem[]
-  const [getLocalStorageCart, setLocalStorageCart] = appLocalStorage(
+  const [localStorageCart, setLocalStorageCart] = useAppLocalStorage(
     LOCAL_STORAGE_KEY,
     defaultCart,
   )
 
   return createSlice({
     name: 'cart',
-    initialState: defaultCart,
+    initialState: localStorageCart,
     reducers: {
-      initCart() {
-        return [...getLocalStorageCart()]
-      },
       addToCart(state, action: PayloadAction<Product>) {
         state.push({ ...action.payload, quantity: 1 })
         setLocalStorageCart(state)
@@ -61,7 +58,6 @@ export const {
   removeFromCart,
   decrementCartItem,
   incrementCartItem,
-  initCart,
 } = cartSlice.actions
 
 export default cartSlice.reducer
