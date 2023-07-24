@@ -11,6 +11,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/Popover'
 import { useDispatch } from 'react-redux'
 import { setCurrency } from '@/redux/currency.slice'
 import Link from 'next/link'
+import { useAuth0 } from '@auth0/auth0-react'
+import UserIcon from '../icons/UserIcon'
+import Cookies from 'js-cookie'
 
 export function HeaderCurrenyPopover({
   rates,
@@ -61,9 +64,11 @@ interface HeaderProps
   rates: Rates
 }
 export default function Header({ rates, className, ...attrs }: HeaderProps) {
+  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0()
   const cart = useAppSelector((state) => state.cart)
   const [currency] = useAppSelector((state) => state.currency)
   const cartItems = cart.length
+
   return (
     <header
       className={cn(
@@ -77,9 +82,37 @@ export default function Header({ rates, className, ...attrs }: HeaderProps) {
           <Image src="/Logo.svg" width={140} alt="logo" height={20} />
         </Link>
         <div className="flex h-[48px] items-center gap-10">
-          <button className="btn btn-pill border border-solid border-royal-blue bg-transparent text-royal-blue hover:opacity-50 active:opacity-100">
-            Sign in
-          </button>
+          {isAuthenticated ? (
+            <div className="flex items-center gap-5">
+              <div className="flex items-center gap-2.5">
+                {user?.picture ? (
+                  <div className="relative h-6 w-6 overflow-hidden rounded-full">
+                    <Image src={user.picture} alt="" sizes="inherit" fill />
+                  </div>
+                ) : (
+                  <UserIcon />
+                )}
+
+                <span className="text-base font-bold not-italic leading-[100%] tracking-[-0.16px] text-slate-blue">
+                  {user?.name}
+                </span>
+              </div>
+              <button
+                className="btn btn-pill border border-solid border-royal-blue bg-transparent text-royal-blue hover:opacity-50 active:opacity-100"
+                onClick={() => logout()}
+              >
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <button
+              className="btn btn-pill border border-solid border-royal-blue bg-transparent text-royal-blue hover:opacity-50 active:opacity-100"
+              onClick={() => loginWithRedirect()}
+            >
+              Sign in
+            </button>
+          )}
+
           <div className="relative flex items-center">
             <Link href="/shopping-bag">
               <ShoppingCart

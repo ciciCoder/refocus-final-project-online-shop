@@ -1,5 +1,6 @@
 import { fetchCurrencyRates } from '@/api/currency.api'
 import Footer from '@/components/core/Footer'
+import { useAuth0 } from '@auth0/auth0-react'
 import dynamic from 'next/dynamic'
 
 interface GuestLayoutProps {
@@ -12,7 +13,6 @@ export const revalidate = 86400
 
 export default async function GuestLayout({ children }: GuestLayoutProps) {
   const currencyRates = await fetchCurrencyRates()
-
   return (
     <div className="min-h-[100vh]">
       <div className="h-header bg-midnight-blue">

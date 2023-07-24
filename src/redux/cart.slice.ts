@@ -27,9 +27,14 @@ const cartSlice = (() => {
         setLocalStorageCart(filteredState)
         return filteredState
       },
+      clearCart() {
+        setLocalStorageCart([])
+        return []
+      },
       incrementCartItem(state, action: PayloadAction<CartItem['id']>) {
         const mappedState = state.map((item) => {
           if (item.id !== action.payload) return item
+          if (item.stock - item.quantity <= 0) return item
           return {
             ...item,
             quantity: item.quantity + 1,
@@ -41,6 +46,7 @@ const cartSlice = (() => {
       decrementCartItem(state, action: PayloadAction<CartItem['id']>) {
         const mappedState = state.map((item) => {
           if (item.id !== action.payload) return item
+          if (item.quantity <= 0) return item
           return {
             ...item,
             quantity: item.quantity - 1,
@@ -58,6 +64,7 @@ export const {
   removeFromCart,
   decrementCartItem,
   incrementCartItem,
+  clearCart,
 } = cartSlice.actions
 
 export default cartSlice.reducer
