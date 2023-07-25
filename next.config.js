@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: process.env.NEXT_PUBLIC_BASE_URL ?? undefined,
+  basePath: process.env.NEXT_PUBLIC_BASE_URL ?? '',
   images: {
     domains: [
       'i.dummyjson.com',
