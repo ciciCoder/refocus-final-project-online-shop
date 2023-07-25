@@ -9,7 +9,10 @@ interface GuestRootLoadingProps {
 export default function GuestRootLoading({}: GuestRootLoadingProps) {
   return (
     <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center">
-      <LDSRoller className="scale-[3]" circleColor="rgb(var(--slate-blue))" />
+      <LDSRoller
+        className="sm:scale-[3]"
+        circleColor="rgb(var(--slate-blue))"
+      />
     </div>
   )
 }

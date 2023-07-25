@@ -1,9 +1,9 @@
 'use client'
 
-import { SVGProps } from 'react'
+import { CSSProperties, SVGProps } from 'react'
 
-interface ShoppingCardProps extends SVGProps<SVGSVGElement> {}
-export default function ShoppingCart(props: ShoppingCardProps) {
+export interface ShoppingCartProps extends SVGProps<SVGSVGElement> {}
+export default function ShoppingCart(props: ShoppingCartProps) {
   return (
     <svg
       width="24"

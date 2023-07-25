@@ -1,12 +1,15 @@
 'use client'
 
-interface PlusVariantProps {
+import { SVGProps } from 'react'
+
+interface PlusVariantProps extends SVGProps<SVGSVGElement> {
   background?: string
   foreground?: string
 }
 export default function PlusVariant({
   background,
   foreground,
+  ...props
 }: PlusVariantProps) {
   return (
     <svg
@@ -15,6 +18,7 @@ export default function PlusVariant({
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <rect width="24" height="24" rx="6" fill={background} />
       <path

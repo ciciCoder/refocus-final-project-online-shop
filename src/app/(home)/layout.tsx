@@ -1,6 +1,6 @@
 import { fetchCurrencyRates } from '@/api/currency.api'
 import Footer from '@/components/core/Footer'
-import { useAuth0 } from '@auth0/auth0-react'
+import HeaderExt from '@/components/core/HeaderExt'
 import dynamic from 'next/dynamic'
 
 interface GuestLayoutProps {
@@ -15,11 +15,14 @@ export default async function GuestLayout({ children }: GuestLayoutProps) {
   const currencyRates = await fetchCurrencyRates()
   return (
     <div className="min-h-[100vh]">
-      <div className="h-header bg-midnight-blue">
+      <div className="sticky top-0 z-50 flex flex-col bg-white sm:relative">
         <Header rates={currencyRates} />
+        <HeaderExt />
       </div>
-      <main className="relative min-h-main py-[60px]">
-        <div className="m-auto w-app-max">{children}</div>
+      <main className="relative min-h-main-xs pb-[60px] pt-0 sm:min-h-main sm:pt-[60px]">
+        <div className="m-auto w-app-max-xs sm:w-app-max-sm lg:w-app-max">
+          {children}
+        </div>
       </main>
       <Footer />
     </div>

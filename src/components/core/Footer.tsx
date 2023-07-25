@@ -16,12 +16,12 @@ export default function Footer({ className, ...attrs }: FooterProps) {
   return (
     <footer
       className={cn(
-        'flex h-footer w-full items-center bg-dark-midnight-blue',
+        'flex h-footer-xs w-full items-center bg-dark-midnight-blue sm:h-footer',
         className,
       )}
       {...attrs}
     >
-      <div className="m-auto flex h-[56px] w-app-max justify-between">
+      <div className="m-auto flex w-app-max-xs flex-col gap-10 sm:h-[56px] sm:w-app-max-sm sm:flex-row sm:justify-between sm:gap-0 lg:w-app-max">
         <div className="flex flex-col gap-2.5">
           <span className="text-xs font-normal not-italic leading-[130%] tracking-[-0.24px] text-white">
             Follow Us

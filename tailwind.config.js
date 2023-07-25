@@ -73,6 +73,8 @@ const keyframes = {
 
 const width = {
   'app-max': '1040px',
+  'app-max-sm': 'calc(100vw - 160px)',
+  'app-max-xs': 'calc(100vw - 40px)',
 }
 
 const animation = {
@@ -81,11 +83,14 @@ const animation = {
 
 const height = {
   header: '84px',
+  'header-xs': '90px',
   footer: '176px',
+  'footer-xs': '212px',
 }
 
 const minHeight = {
   main: 'calc(100vh - 84px - 176px)',
+  'main-xs': 'calc(100vh - 90px - 212px - 60px)',
 }
 
 module.exports = {

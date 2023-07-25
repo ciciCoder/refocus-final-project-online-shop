@@ -44,10 +44,10 @@ export default function ProductIndex({
 
   return (
     <div className="flex flex-col gap-10">
-      <h2 className="font-[Arial] text-4xl font-bold not-italic leading-[130%] text-dark-midnight-blue">
+      <h2 className="hidden font-[Arial] text-4xl font-bold not-italic leading-[130%] text-dark-midnight-blue sm:block">
         All Products
       </h2>
-      <div className="grid grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
         {productList.map((product) => (
           <ProductCard
             href={`/products/${product.id}`}
@@ -59,7 +59,7 @@ export default function ProductIndex({
       {total > limit && (
         <div className="flex justify-center">
           <Link
-            className="btn btn-pill border border-solid border-royal-blue bg-royal-blue text-white duration-500 hover:bg-opacity-50"
+            className="btn btn-pill w-full border border-solid border-royal-blue bg-royal-blue text-white duration-500 hover:bg-opacity-50 sm:w-auto"
             scroll={false}
             href={`/?${nextSearchParams}`}
             onClick={() => setLoadingMore(true)}

@@ -14,7 +14,7 @@ export default function Providers({ children }: ProvidersProps) {
         domain="dev-yn7i7cmzb0qsph5v.us.auth0.com"
         clientId="4TuOOkSAqG4vd67bZq7ILQsfn3wiemVC"
         authorizationParams={{
-          redirect_uri: window?.location.origin,
+          redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI,
         }}
         useRefreshTokens
         cacheLocation="localstorage"

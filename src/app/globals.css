@@ -126,14 +126,14 @@
 
   .card {
     display: flex;
-    width: 320px;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    @apply w-full sm:w-[320px];
   }
 
   .card-img {
-    width: 320px;
+    width: inherit;
     height: 165px;
     position: relative;
     box-sizing: border-box;
@@ -155,7 +155,7 @@
     box-sizing: border-box;
     border: 1px solid rgb(var(--slate-blue));
     border-top: none;
-    width: 320px;
+    width: inherit;
     padding: 10px 20px;
     gap: 20px;
     background: rgb(var(--ghost-white));

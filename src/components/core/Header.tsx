@@ -2,8 +2,7 @@
 
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
-import { DetailedHTMLProps, HTMLAttributes, useEffect, useMemo } from 'react'
-import ShoppingCart from '../icons/ShoppingCart'
+import { DetailedHTMLProps, HTMLAttributes, useMemo } from 'react'
 import ChevronDown from '../icons/ChevronDown'
 import { useAppSelector } from '@/hooks'
 import { Rates } from '@/api/currency.api'
@@ -13,7 +12,8 @@ import { setCurrency } from '@/redux/currency.slice'
 import Link from 'next/link'
 import { useAuth0 } from '@auth0/auth0-react'
 import UserIcon from '../icons/UserIcon'
-import Cookies from 'js-cookie'
+import ShoppingCartItems from '../ui/ShoppingCartItems'
+import join from 'join-path'
 
 export function HeaderCurrenyPopover({
   rates,
@@ -72,18 +72,23 @@ export default function Header({ rates, className, ...attrs }: HeaderProps) {
   return (
     <header
       className={cn(
-        'flex h-header w-full items-center bg-midnight-blue',
+        'flex h-header-xs w-full bg-midnight-blue sm:h-header sm:items-center',
         className,
       )}
       {...attrs}
     >
-      <div className="m-auto flex w-app-max items-center justify-between">
+      <div className="m-auto flex w-app-max-xs items-end justify-between sm:w-app-max-sm sm:items-center lg:w-app-max">
         <Link href="/">
-          <Image src="/Logo.svg" width={140} alt="logo" height={20} />
+          <Image
+            src={join(process.env.NEXT_PUBLIC_BASE_PATH, '/Logo.svg')}
+            width={140}
+            alt="logo"
+            height={20}
+          />
         </Link>
-        <div className="flex h-[48px] items-center gap-10">
+        <div className="flex h-[48px] items-end gap-10 sm:items-center">
           {isAuthenticated ? (
-            <div className="flex items-center gap-5">
+            <div className="hidden items-center gap-5 sm:flex">
               <div className="flex items-center gap-2.5">
                 {user?.picture ? (
                   <div className="relative h-6 w-6 overflow-hidden rounded-full">
@@ -106,25 +111,16 @@ export default function Header({ rates, className, ...attrs }: HeaderProps) {
             </div>
           ) : (
             <button
-              className="btn btn-pill border border-solid border-royal-blue bg-transparent text-royal-blue hover:opacity-50 active:opacity-100"
+              className="btn btn-pill  hidden border border-solid border-royal-blue bg-transparent text-royal-blue hover:opacity-50 active:opacity-100 sm:flex"
               onClick={() => loginWithRedirect()}
             >
               Sign in
             </button>
           )}
 
-          <div className="relative flex items-center">
+          <div className="relative hidden items-center sm:flex">
             <Link href="/shopping-bag">
-              <ShoppingCart
-                width={24}
-                height={24}
-                className="fill-slate-blue"
-              />
-              {!!cartItems && (
-                <div className="absolute right-0 top-0 flex h-2.5 w-2.5 items-center justify-center overflow-hidden rounded-full bg-white text-center text-[6px] font-semibold not-italic leading-[100%] tracking-[-0.06px]">
-                  {cartItems}
-                </div>
-              )}
+              <ShoppingCartItems count={cartItems} />
             </Link>
           </div>
           <HeaderCurrenyPopover rates={rates}>
