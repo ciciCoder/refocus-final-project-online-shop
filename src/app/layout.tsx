@@ -2,9 +2,10 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { TooltipProvider } from '@/components/ui/Tooltip'
-import Providers from './providers'
+import dynamic from 'next/dynamic'
 
 const inter = Inter({ subsets: ['latin'] })
+const Providers = dynamic(() => import('./providers'), { ssr: false })
 
 export const metadata: Metadata = {
   title: 'Online Shop',
