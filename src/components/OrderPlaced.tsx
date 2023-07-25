@@ -41,7 +41,7 @@ function OrderPlacedDetails() {
   useEffect(() => {
     if (cart.length) {
       setCachedCart([...cart])
-      // dispatch(clearCart())
+      dispatch(clearCart())
     }
   }, [cart, dispatch])
 
