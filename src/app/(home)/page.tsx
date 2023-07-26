@@ -1,4 +1,8 @@
-import { fetchProducts } from '@/api/product.api'
+import {
+  fetchAllBrands,
+  fetchAllProductCategories,
+  fetchProducts,
+} from '@/api/product.api'
 import dynamic from 'next/dynamic'
 
 const ProductIndex = dynamic(() => import('@/components/ProductIndex'), {
@@ -12,10 +16,18 @@ interface HomeProps {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const { products, limit, total } = await fetchProducts(searchParams)
+  const [productData, productCategories, brands] = await Promise.all([
+    fetchProducts(searchParams),
+    fetchAllProductCategories(),
+    fetchAllBrands(),
+  ])
   return (
     <div>
-      <ProductIndex limit={limit} total={total} products={products} />
+      <ProductIndex
+        {...productData}
+        productCategories={productCategories}
+        brands={brands}
+      />
     </div>
   )
 }
