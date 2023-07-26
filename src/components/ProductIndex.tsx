@@ -136,8 +136,8 @@ export default function ProductIndex({
 
   return (
     <div className="flex flex-col gap-10">
-      <div className="flex justify-between">
-        <h2 className="hidden font-[Arial] text-4xl font-bold not-italic leading-[130%] text-dark-midnight-blue sm:block">
+      <div className="hidden justify-between sm:flex">
+        <h2 className="font-[Arial] text-4xl font-bold not-italic leading-[130%] text-dark-midnight-blue">
           All Products
         </h2>
         <div className="flex gap-2.5">
